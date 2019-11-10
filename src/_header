@@ -14,6 +14,10 @@
     // only CommonJS-like environments that support module.exports,
     // like Node.
     module.exports = factory(root);
+    // This is a hack to attach the lib to the browser root when this lib is
+    // included inside another lib and the whole is browserifyied:
+    /* eslint-disable-next-line no-param-reassign */
+    if (!root.SHP) root.SHP = factory(root);
   } else {
     // Browser globals.
     /* eslint-disable-next-line no-param-reassign */

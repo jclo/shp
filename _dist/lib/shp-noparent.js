@@ -1,5 +1,5 @@
 /*! ****************************************************************************
- * SHP v0.0.0
+ * SHP v0.0.1
  *
  * A library for reading Natural Earth's SHP files.
  * (you can download it from npm or github repositories)
@@ -21,6 +21,10 @@
     // only CommonJS-like environments that support module.exports,
     // like Node.
     module.exports = factory(root);
+    // This is a hack to attach the lib to the browser root when this lib is
+    // included inside another lib and the whole is browserifyied:
+    /* eslint-disable-next-line no-param-reassign */
+    if (!root.SHP) root.SHP = factory(root);
   } else {
     // Browser globals.
     /* eslint-disable-next-line no-param-reassign */
@@ -1143,8 +1147,8 @@
       return obj;
     };
 
-    // Attaches a constant to ESLib that provides the version of the lib.
-    SHP.VERSION = '0.0.0';
+    // Attaches a constant to SHP that provides the version of the lib.
+    SHP.VERSION = '0.0.1';
 
 
     // -- Public Static Methods ------------------------------------------------

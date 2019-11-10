@@ -96,7 +96,7 @@
     return obj;
   };
 
-  // Attaches a constant to ESLib that provides the version of the lib.
+  // Attaches a constant to SHP that provides the version of the lib.
   SHP.VERSION = '{{lib:version}}';
 
 
