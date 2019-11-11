@@ -1,6 +1,6 @@
 {
   "name": "@mobilabs/shp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A library for reading Natural Earth's SHP files",
   "main": "index.js",
   "bin": {},

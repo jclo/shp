@@ -1,5 +1,11 @@
 ### HEAD
 
+### 0.0.1 (November 11, 2019)
+
+  * Fixed an issue that prevents XMLHttpRequest to be instantiated on Node.js,
+  * ...,
+
+
 ### 0.0.1 (November 10, 2019)
 
   * Fixed an issue that prevents SHP to be embedded into another library,

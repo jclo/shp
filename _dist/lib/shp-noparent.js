@@ -1,5 +1,5 @@
 /*! ****************************************************************************
- * SHP v0.0.1
+ * SHP v0.0.2
  *
  * A library for reading Natural Earth's SHP files.
  * (you can download it from npm or github repositories)
@@ -344,7 +344,7 @@
      * @since 0.0.0
     */
     const _XMLHttpRequest = function(url, type, callback) {
-      const xhr = new XMLHttpRequest();
+      const xhr = new window.XMLHttpRequest();
 
       xhr.onreadystatechange = function() {
         let byteArray
@@ -1148,7 +1148,7 @@
     };
 
     // Attaches a constant to SHP that provides the version of the lib.
-    SHP.VERSION = '0.0.1';
+    SHP.VERSION = '0.0.2';
 
 
     // -- Public Static Methods ------------------------------------------------

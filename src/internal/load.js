@@ -56,7 +56,7 @@
    * @since 0.0.0
   */
   const _XMLHttpRequest = function(url, type, callback) {
-    const xhr = new XMLHttpRequest();
+    const xhr = new window.XMLHttpRequest();
 
     xhr.onreadystatechange = function() {
       let byteArray
