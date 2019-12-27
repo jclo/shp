@@ -1,7 +1,5 @@
 /* eslint */
 
-'use strict';
-
 module.exports = {
   dist: './_dist',
   libdir: './lib',
@@ -11,23 +9,24 @@ module.exports = {
   index: './index.js',
   // These are the Javascript files required to build the library.
   /* eslint-disable no-multi-spaces */
-  src: [
-    // These three files (_header, tree.js) must be declared in this order
-    // as they create the umd module and define the object tree and
-    // the function to fill the tree!
-    './src/_header',
-    './src/tree.js',
-    './src/lib/_.js',
+  src: {
+    // This is the header section of the UMD module:
+    header: './src/_header',
 
-    './src/internal/load.js',
-    './src/internal/dbf.js',
-    './src/internal/shp.js',
+    // This is the code of the library that is surrounded by the UMD module
+    // header and footer.
+    core: [
+      './src/shp.js',
+      './src/lib/_.js',
+      './src/internal/load.js',
+      './src/internal/dbf.js',
+      './src/internal/shp.js',
+    ],
 
-    './src/shp.js',
+    // This is the footer section of the UMD module:
+    footer: './src/_footer',
+  },
 
-    // This file must always be the last one as it closes the umd module.
-    './src/_footer',
-  ],
   /* eslint-enable no-multi-spaces */
   license: ['/*! ****************************************************************************',
     ' * {{lib:name}} v{{lib:version}}',

@@ -1,4 +1,4 @@
-// Based on ES6.lib template v0.0.5
+// Based on ES6Libplus template v0.0.2
 // ESLint declarations
 /* global define */
 /* eslint strict: ["error", "function"] */
@@ -17,7 +17,7 @@
     // This is a hack to attach the lib to the browser root when this lib is
     // included inside another lib and the whole is browserifyied:
     /* eslint-disable-next-line no-param-reassign */
-    if (!root.SHP) root.SHP = factory(root);
+    if (root.SHP === null) root.SHP = factory(root);
   } else {
     // Browser globals.
     /* eslint-disable-next-line no-param-reassign */
@@ -31,6 +31,5 @@
   // words for this library.
   /* eslint-disable one-var, semi-style */
   let SHP
-    , _
     ;
   /* eslint-enable one-var, semi-style */

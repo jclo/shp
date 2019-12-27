@@ -1,6 +1,6 @@
 {
   "name": "@mobilabs/shp",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A library for reading Natural Earth's SHP files",
   "main": "index.js",
   "bin": {},
@@ -13,13 +13,16 @@
     "check-coverage": "nyc check-coverage --statements 10 --branches 0 --functions 15 --lines 10",
     "display-coverage": "opener ./coverage/lcov-report/index.html",
     "report-coverage": "nyc report --reporter=text-lcov | coveralls",
-    "report": "nyc report"
+    "report": "nyc report",
+    "doc": ""
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/jclo/shp.git"
   },
-  "keywords": [],
+  "keywords": [
+    "ES6"
+  ],
   "author": {
     "name": "Mobilabs",
     "email": "contact@mobilabs.fr",
@@ -32,26 +35,26 @@
   "homepage": "https://github.com/jclo/shp",
   "dependencies": {},
   "devDependencies": {
-    "chai": "4.2.0",
-    "coveralls": "3.0.7",
-    "cross-env": "6.0.3",
-    "del": "5.1.0",
-    "eslint": "6.6.0",
-    "eslint-config-airbnb-base": "14.0.0",
-    "eslint-plugin-import": "2.18.2",
-    "gulp": "4.0.2",
-    "gulp-concat": "2.6.1",
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.9",
+    "cross-env": "^6.0.3",
+    "del": "^5.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.19.1",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
     "gulp-connect": "^5.7.0",
-    "gulp-footer": "2.0.2",
-    "gulp-header": "2.0.9",
-    "gulp-replace": "1.0.0",
-    "gulp-uglify-es": "2.0.0",
-    "husky": "3.0.9",
+    "gulp-header": "^2.0.9",
+    "gulp-modulify": "0.0.2",
+    "gulp-replace": "^1.0.0",
+    "gulp-uglify-es": "^2.0.0",
+    "husky": "^3.1.0",
     "jmaps": "^0.4.2",
-    "mocha": "6.2.2",
-    "nyc": "14.1.1",
-    "open": "7.0.0",
-    "opener": "1.5.1"
+    "mocha": "^6.2.2",
+    "nyc": "^15.0.0",
+    "open": "^7.0.0",
+    "opener": "^1.5.1"
   },
   "publishConfig": {
     "access": "public"

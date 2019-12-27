@@ -1,18 +1,19 @@
 /* eslint one-var: 0, semi-style: 0 */
 
-'use strict';
-
 // -- Node modules
 const { watch, series } = require('gulp')
     , connect = require('gulp-connect')
     , open    = require('open')
     ;
 
+
 // -- Local constants
 const filesToWatch = ['src/**/*.js', 'src/_header', 'src/_footer']
     ;
 
+
 // -- Local variables
+
 
 // -- Gulp Private Tasks
 const build       = require('./tasks/makejs')

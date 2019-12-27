@@ -1,5 +1,5 @@
 /*! ****************************************************************************
- * SHP v0.0.2
+ * SHP v0.0.3
  *
  * A library for reading Natural Earth's SHP files.
  * (you can download it from npm or github repositories)
@@ -7,7 +7,7 @@
  * Released under the MIT license. You may obtain a copy of the License
  * at: http://www.opensource.org/licenses/mit-license.php).
  * ************************************************************************** */
-// Based on ES6.lib template v0.0.5
+// Based on ES6Libplus template v0.0.2
 // ESLint declarations
 /* global define */
 /* eslint strict: ["error", "function"] */
@@ -26,7 +26,7 @@
     // This is a hack to attach the lib to the browser root when this lib is
     // included inside another lib and the whole is browserifyied:
     /* eslint-disable-next-line no-param-reassign */
-    if (!root.SHP) root.SHP = factory(root);
+    if (root.SHP === null) root.SHP = factory(root);
   } else {
     // Browser globals.
     /* eslint-disable-next-line no-param-reassign */
@@ -40,33 +40,326 @@
   // words for this library.
   /* eslint-disable one-var, semi-style */
   let SHP
-    , _
     ;
   /* eslint-enable one-var, semi-style */
 
   /* ***************************************************************************
    *
-   * Tree is an internal object that links all the internal modules.
+   * Tree is an object that links all the internal IIFE modules.
    *
-   * tree.js is just a literal object that contains a set of functions. It
-   * can't be intantiated.
+   * ************************************************************************ */
+  /* eslint-disable-next-line */
+  let $__TREE = {"src":{"shp":{},"lib":{"_":{}},"internal":{"load":{},"dbf":{},"shp":{}}}};
+  /* eslint-disable-next-line */
+  $__TREE.extend=function(o,m){var k=Object.keys(m);for(var i=0;i<k.length;i++){o[k[i]]=m[k[i]]}};
+
+  /** **************************************************************************
+   *
+   * Defines the SHP object.
+   *
+   * shp.js is built upon the Prototypal Instantiation pattern. It
+   * returns an object by calling its constructor. It doesn't use the new
+   * keyword.
+   *
+   * Private Functions:
+   *  . none,
    *
    *
-   * @namespace SHP
-   * @exports   -
-   * @author    -
-   * @since     0.0.0
-   * @version   -
+   * Constructor:
+   *  . SHP                         creates and returns the SHP object,
+   *
+   *
+   * Public Static Methods:
+   *  . noConflict                  returns a reference to this SHP object,
+   *
+   *
+   * Private Methods:
+   *  . _getDbfRecord               returns a Dbf record,
+   *  . _getDbfHeader               returns the header of the Dbf file,
+   *  . _getDbfFieldDescriptor      returns the field descriptor of the Dbf file,
+   *  . _getShpRecord               returns a Shp record
+   *  . _getShpHeader               returns the header of the shp file,
+   *
+
+   * Public Methods:
+   *  . load                        loads the Natural Earth database,
+   *  . getCollection               returns a GeoJSON collection,
+   *  . getFeature                  returns the requested GeoJSON feature,
+   *  . getSource                   returns the name and the version of the db,
+   *
+   *
+   *
+   * @namespace    SHP
+   * @dependencies none
+   * @exports      -
+   * @author       -
+   * @since        0.0.0
+   * @version      -
    * ************************************************************************ */
   /* - */
+  /* eslint-disable one-var, semi-style, no-underscore-dangle */
 
-  const SHT = {
-    //
-  };
-  /* - */
+  (function() {
+    // IIFE START
 
 
-  /* ***************************************************************************
+    // -- Local modules
+    const Util = $__TREE.src.internal.load;
+    const DBF = $__TREE.src.internal.dbf;
+    const SH = $__TREE.src.internal.shp;
+
+
+    // -- Local constants
+    // Saves the previous value of the library variable, so that it can be
+    // restored later on, if noConflict is used.
+    const previousSHP = root.SHP
+        ;
+
+
+    // -- Local variables
+    let methods
+      ;
+
+
+    // -- Public ---------------------------------------------------------------
+
+    /**
+     * Returns the SHP object.
+     * (Prototypal Instantiation Pattern)
+     *
+     * @constructor (arg1)
+     * @public
+     * @param {String}          the argument to be saved as an object variable,
+     * @returns {Object}        returns the SHP object,
+     * @since 0.0.0
+     */
+    SHP = function() {
+      const obj = Object.create(methods);
+      obj._dbf = {
+        buf: null,
+        header: null,
+        fieldDescriptorArray: null,
+      };
+      obj._shp = {
+        buf: null,
+        header: null,
+      };
+      return obj;
+    };
+
+    // Attaches a constant to SHP that provides the version of the lib.
+    SHP.VERSION = '0.0.3';
+
+
+    // -- Public Static Methods ------------------------------------------------
+
+    /**
+     * Returns a reference to this SHP object.
+     *
+     * Nota:
+     * Running SHP in noConflic mode, returns the SHP variable to
+     * its previous owner.
+     *
+     * @method ()
+     * @public
+     * @param {}                -,
+     * @returns {String}        returns the SHP object,
+     * @since 0.0.0
+     */
+    /* istanbul ignore next */
+    SHP.noConflict = function() {
+      /* eslint-disable-next-line no-param-reassign */
+      root.SHP = previousSHP;
+      return this;
+    };
+
+
+    methods = {
+
+      // -- Private Methods ----------------------------------------------------
+
+      /**
+       * Returns a Dbf record.
+       *
+       * @method (arg1)
+       * @private
+       * @param {Number}        the record number,
+       * @returns {Object}      returns the requested Dbf record,
+       * @since 0.0.0
+       */
+      _getDbfRecord(n) {
+        return DBF.getRecord(this._dbf, n);
+      },
+
+      /**
+       * Returns the header of the Dbf file.
+       *
+       * @method ()
+       * @private
+       * @param {}              -,
+       * @returns {Object}      return the header,
+       * @since 0.0.0
+       */
+      _getDbfHeader() {
+        return this._dbf.header;
+      },
+
+      /**
+       * Returns the field Descriptor of the Dbf file.
+       *
+       * @method ()
+       * @private
+       * @param {}              -,
+       * @returns {Object}      returns the field Descriptor,
+       * @since 0.0.0
+       */
+      _getDbfFieldDescriptor() {
+        return this._dbf.fieldDescriptorArray;
+      },
+
+      /**
+       * Returns a Shp record.
+       *
+       * @method (arg1)
+       * @private
+       * @param {Number}        the requested record,
+       * @returns {Object}      returns the requested record,
+       * @since 0.0.0
+       */
+      _getShpRecord(n) {
+        return SH.getRecord(this._shp, n);
+      },
+
+      /**
+       * Returns the header of the shp file.
+       *
+       * @method ()
+       * @private
+       * @param {}              -,
+       * @returns {Object}      returns the header,
+       * @since 0.0.0
+       */
+      _getShpHeader() {
+        return this._shp.header;
+      },
+
+
+      // -- Public Methods -----------------------------------------------------
+
+      /**
+       * Loads the Natural Earth database.
+       *
+       * @method (arg1, arg2)
+       * @public
+       * @param {String}        the database path,
+       * @param {Function}      the function to call at the completion,
+       * @returns {Object}      returns a promise,
+       * @since 0.0.0
+       */
+
+      load(db, callback) {
+        return new Promise((resolve) => {
+          Util.load(db, (data) => {
+            [this._dbf.buf] = data;
+            [, this._shp.buf] = data;
+            [,, this._source] = data;
+            DBF.decode(this._dbf);
+            SH.decode(this._shp);
+            resolve();
+            if (callback) callback();
+          });
+        });
+      },
+
+      /**
+       * Returns a GeoJSON collection.
+       *
+       * @method ()
+       * @public
+       * @param {}              -,
+       * @returns {Object}      returns a collection,
+       * @since 0.0.0
+       */
+      getCollection() {
+        const { header } = this._shp
+            , dbfrecord  = this._getDbfRecord()
+            , shprecord  = this._getShpRecord()
+            ;
+
+        const collection = {
+          bbox: [header.Xmin, header.Ymin, header.Xmax, header.Ymax],
+          type: 'FeatureCollection',
+          features: [],
+        };
+
+        for (let i = 0; i < this._dbf.header.numberOfRecords; i++) {
+          collection.features[i] = {
+            type: 'Feature',
+            properties: dbfrecord[i],
+            geometry: {
+              type: shprecord[i].type,
+              coordinates: shprecord[i].coordinates,
+            },
+          };
+        }
+        return collection;
+      },
+
+      /**
+       * Returns the requested GeoJSON feature.
+       *
+       * @method (arg1)
+       * @public
+       * @param {Number}        the requested feature,
+       * @returns {Object}      returns a GeoJON feature,
+       * @since 0.0.0
+       */
+      getFeature(n) {
+        // Is this record available?
+        if (typeof n !== 'number'
+            || n % 1 !== 0
+            || n <= 0
+            || n > this._dbf.header.numberOfRecords) {
+          throw new Error(`The record Number "${n}" does not match!`);
+        }
+
+        const record = SH.getRecord(this._shp, n);
+        return {
+          type: 'Feature',
+          properties: DBF.getRecord(this._dbf, n),
+          geometry: {
+            type: record.type,
+            coordinates: record.coordinates,
+          },
+        };
+      },
+
+      /**
+       * Returns the name and the version of the Natural Earth database.
+       *
+       * @method ()
+       * @public
+       * @param {}              -,
+       * @returns {Object}      returns the data source,
+       * @since 0.0.0
+       */
+      getSource() {
+        return {
+          name: this._source.db,
+          version: this._source.version,
+        };
+      },
+    };
+
+
+    // -- Export
+    // none (SHP is attached to the global window)
+
+    // IIFE END
+  }());
+  /* eslint-enable one-var, semi-style, no-underscore-dangle */
+
+  /** **************************************************************************
    *
    * A set of utility primitives to read an ArrayBuffer.
    *
@@ -88,19 +381,18 @@
    *
    *
    *
-   * @namespace    _
+   * @namespace    SHP.src.lib._
    * @dependencies none
    * @exports      -
    * @author       -
    * @since        0.0.0
    * @version      -
    * ************************************************************************ */
+  /* - */
   /* eslint-disable one-var, semi-style, no-underscore-dangle */
 
   (function() {
-    // IIFE
-
-    // -- Module path
+    // IIFE START
 
 
     // -- Local modules
@@ -119,11 +411,11 @@
      *
      * @function (arg1, arg2, arg3)
      * @private
-     * @param {Array}         the array buffer,
-     * @param {Number}        the first included buffer item,
-     * @param {Number}        the first excluded buffer item,
-     * @throws {Error}        throws an error if it isn't an utf-8 data,
-     * @returns {String}      returns the UTF-8 string,
+     * @param {Array}           the array buffer,
+     * @param {Number}          the first included buffer item,
+     * @param {Number}          the first excluded buffer item,
+     * @throws {Error}          throws an error if it isn't an utf-8 data,
+     * @returns {String}        returns the UTF-8 string,
      * @since 0.0.0
     */
     /* eslint-disable no-bitwise */
@@ -166,17 +458,17 @@
 
     // -- Public Static Methods ------------------------------------------------
 
-    _ = {
+    const underscore = {
 
       /**
        * Returns an ASCII string.
        *
        * @method (arg1, arg2, arg3)
        * @public
-       * @param {Array}       the array buffer,
-       * @param {Number}      the first buffer item,
-       * @param {Number}      the first excluded buffer item,
-       * @returns {String}    returns an ascii string,
+       * @param {Array}         the array buffer,
+       * @param {Number}        the first buffer item,
+       * @param {Number}        the first excluded buffer item,
+       * @returns {String}      returns an ascii string,
        * @since 0.0.0
       */
       /* eslint-disable no-control-regex */
@@ -194,11 +486,11 @@
        *
        * @method (arg1, arg2, arg3)
        * @public
-       * @param {Array}       the array buffer,
-       * @param {Number}      the first buffer item,
-       * @param {Number}      the first excluded buffer item,
-       * @throws {Error}      throws an error if it isn't an utf-8 data,
-       * @returns {String}    returns the UTF-8 string,
+       * @param {Array}         the array buffer,
+       * @param {Number}        the first buffer item,
+       * @param {Number}        the first excluded buffer item,
+       * @throws {Error}        throws an error if it isn't an utf-8 data,
+       * @returns {String}      returns the UTF-8 string,
        * @since 0.0.0
       */
       readUTF8String(buf, start, stop) {
@@ -224,9 +516,9 @@
        *
        * @method (arg1, arg2)
        * @public
-       * @param {Array}       the buffer array,
-       * @param {Number}      the first item in the buffer array,
-       * @returns {Number}    returns a number,
+       * @param {Array}         the buffer array,
+       * @param {Number}        the first item in the buffer array,
+       * @returns {Number}      returns a number,
        * @since 0.0.0
        */
       readUInt16LE(buf, pos) {
@@ -238,9 +530,9 @@
        *
        * @method (arg1, arg2)
        * @public
-       * @param {Array}       the buffer array,
-       * @param {Number}      the first item in the buffer array,
-       * @returns {Number}    returns a number,
+       * @param {Array}         the buffer array,
+       * @param {Number}        the first item in the buffer array,
+       * @returns {Number}      returns a number,
        * @since 0.0.0
        */
       readUInt32LE(buf, pos) {
@@ -255,9 +547,9 @@
        *
        * @method (arg1, arg2)
        * @public
-       * @param {Array}       the buffer array,
-       * @param {Number}      the first item in the buffer array,
-       * @returns {Number}    returns a number,
+       * @param {Array}         the buffer array,
+       * @param {Number}        the first item in the buffer array,
+       * @returns {Number}      returns a number,
        * @since 0.0.0
        */
       readUInt32BE(buf, pos) {
@@ -272,9 +564,9 @@
        *
        * @method (arg1, arg2)
        * @public
-       * @param {Array}       the buffer array,
-       * @param {Number}      the first item in the buffer array,
-       * @returns {Number}    returns a number,
+       * @param {Array}         the buffer array,
+       * @param {Number}        the first item in the buffer array,
+       * @returns {Number}      returns a number,
        * @since 0.0.0
        */
       readDoubleLE(buf, pos) {
@@ -286,13 +578,17 @@
         }
         return view.getFloat64(0);
       },
-
     };
+
+
+    // -- Export
+    $__TREE.extend($__TREE.src.lib._, underscore);
+
+    // IIFE END
   }());
   /* eslint-enable one-var, semi-style, no-underscore-dangle */
 
-
-  /* ***************************************************************************
+  /** **************************************************************************
    *
    * A set of primitives to download Natural Earth database files.
    *
@@ -309,19 +605,18 @@
    *
    *
    *
-   * @namespace    SHT.Util
+   * @namespace    SHP.src.internal.load
    * @dependencies none
    * @exports      -
    * @author       -
    * @since        0.0.0
    * @version      -
    * ************************************************************************ */
+  /* - */
   /* eslint-disable one-var, semi-style, no-underscore-dangle */
 
   (function() {
-    // IIFE
-
-    // -- Module path
+    // IIFE START
 
 
     // -- Local modules
@@ -340,11 +635,11 @@
      *
      * @function (arg1, arg2, arg3)
      * @private
-     * @param {String}        the file url,
-     * @param {String}        the type of file (json or binary),
-     * @param {Function}      the function to call at the completion,
-     * @throws {Object}       throws an error if the type isn't supported,
-     * @returns {String}      returns a string,
+     * @param {String}          the file url,
+     * @param {String}          the type of file (json or binary),
+     * @param {Function}        the function to call at the completion,
+     * @throws {Object}         throws an error if the type isn't supported,
+     * @returns {String}        returns a string,
      * @since 0.0.0
     */
     const _XMLHttpRequest = function(url, type, callback) {
@@ -393,9 +688,9 @@
      *
      * @function (arg1, arg2)
      * @private
-     * @param {String}        the database path,
-     * @param {Function}      the function to call at the completion,
-     * @returns {}            -,
+     * @param {String}          the database path,
+     * @param {Function}        the function to call at the completion,
+     * @returns {}              -,
      * @since 0.0.0
     */
     function _load(db, callback) {
@@ -413,27 +708,32 @@
 
     // -- Public Static Methods ------------------------------------------------
 
-    SHT.Util = {
+    const Util = {
 
       /**
        * Loads the database.
        *
        * @method (arg1, arg2)
        * @public
-       * @param {String}      the database path,
-       * @param {Function}    the function to call at the completion,
-       * @returns {}          -,
+       * @param {String}        the database path,
+       * @param {Function}      the function to call at the completion,
+       * @returns {}            -,
        * @since 0.0.0
        */
       load(db, callback) {
         _load(db, callback);
       },
     };
+
+
+    // -- Export
+    $__TREE.extend($__TREE.src.internal.load, Util);
+
+    // IIFE END
   }());
   /* eslint-enable one-var, semi-style, no-underscore-dangle */
 
-
-  /* ***************************************************************************
+  /** **************************************************************************
    *
    * A set of primitives to process the DBF files.
    *
@@ -453,22 +753,22 @@
    *
    *
    *
-   * @namespace    SHT.DBF
+   * @namespace    SHP.src.internal.dbf
    * @dependencies none
    * @exports      -
    * @author       -
    * @since        0.0.0
    * @version      -
    * ************************************************************************ */
+  /* - */
   /* eslint-disable one-var, semi-style, no-underscore-dangle */
 
   (function() {
-    // IIFE
-
-    // -- Module path
+    // IIFE START
 
 
     // -- Local modules
+    const { _ } = $__TREE.src.lib;
 
 
     // -- Local constants
@@ -484,8 +784,8 @@
      *
      * @function (arg1)
      * @private
-     * @param {Object}        the Dbf object,
-     * @returns {Object}      returns the dbf header,
+     * @param {Object}          the Dbf object,
+     * @returns {Object}        returns the dbf header,
      * @since 0.0.0
      */
     function _getHeader(dbf) {
@@ -514,10 +814,10 @@
      *
      * @function (arg1, arg2)
      * @private
-     * @param {Array}         the Dbf file buffer,
-     * @param {Object}        the file header,
-     * @throws {Object}       throws an error if the descriptor terminator is missing,
-     * @returns {}            -,
+     * @param {Array}           the Dbf file buffer,
+     * @param {Object}          the file header,
+     * @throws {Object}         throws an error if the descriptor terminator is missing,
+     * @returns {}              -,
      * @since 0.0.0
      */
     function _retrieveFieldDescriptor(buf, header) {
@@ -547,12 +847,12 @@
      *
      * @function (arg1, arg2, arg2, arg4)
      * @private
-     * @param {Array}         the Dbf file buffer,
-     * @param {Object}        the file header,
-     * @param {Object}        the field descriptor,
-     * @param {Number}        the record to read,
-     * @throws {Object}       throws an error if the record isn't valid,
-     * @returns {Object}      returns the requested record,
+     * @param {Array}           the Dbf file buffer,
+     * @param {Object}          the file header,
+     * @param {Object}          the field descriptor,
+     * @param {Number}          the record to read,
+     * @throws {Object}         throws an error if the record isn't valid,
+     * @returns {Object}        returns the requested record,
      * @since 0.0.0
      */
     function _retrieveRecord(buf, header, fieldDescriptorArray, number) {
@@ -618,9 +918,9 @@
      *
      * @function (arg1, arg2)
      * @private
-     * @param {Object}        the Dbf object,
-     * @param {Number}        the record to retrieve,
-     * @returns {Array}       returns the requested record,
+     * @param {Object}          the Dbf object,
+     * @param {Number}          the record to retrieve,
+     * @returns {Array}         returns the requested record,
      * @since 0.0.0
      */
     /* eslint-disable max-len */
@@ -646,7 +946,7 @@
 
     // -- Public Static Methods ------------------------------------------------
 
-    SHT.DBF = {
+    const DBF = {
 
       /**
        * Decodes the Dbf file.
@@ -678,11 +978,16 @@
         return _getRecord(dbf, number);
       },
     };
+
+
+    // -- Export
+    $__TREE.extend($__TREE.src.internal.dbf, DBF);
+
+    // IIFE END
   }());
-  /* eslint-enable one-var, semi-style, no-underscore-dangle */
+  /* eslint-disable one-var, semi-style, no-underscore-dangle */
 
-
-  /* ***************************************************************************
+  /** **************************************************************************
    *
    * A set of primitives to process the SHP files.
    *
@@ -726,22 +1031,22 @@
    *
    *
    *
-   * @namespace    SHT.SH
+   * @namespace    SHP.src.internal.shp
    * @dependencies none
    * @exports      -
    * @author       -
    * @since        0.0.0
    * @version      -
    * ************************************************************************ */
+  /* - */
   /* eslint-disable one-var, semi-style, no-underscore-dangle */
 
   (function() {
-    // IIFE
-
-    // -- Module path
+    // IIFE START
 
 
     // -- Local modules
+    const { _ } = $__TREE.src.lib;
 
 
     // -- Local constants
@@ -760,9 +1065,9 @@
      *
      * @function (arg1)
      * @private
-     * @param {Array}         the shp file buffer,
-     * @throws {Object}       throws an error if the decoded header is invalid,
-     * @returns {Object}      returns the decoded header,
+     * @param {Array}           the shp file buffer,
+     * @throws {Object}         throws an error if the decoded header is invalid,
+     * @returns {Object}        returns the decoded header,
      * @since 0.0.0
      */
     function _getHeader(buf) {
@@ -809,9 +1114,9 @@
      *
      * @function (arg1, arg2)
      * @private
-     * @param {Array}         the shp file buffer,
-     * @param {Number}        the position of the first item in the buffer,
-     * @returns {Array}       returns the Point geometry,
+     * @param {Array}           the shp file buffer,
+     * @param {Number}          the position of the first item in the buffer,
+     * @returns {Array}         returns the Point geometry,
      * @since 0.0.0
      */
     function _retrievePoint(buf, offset) {
@@ -827,9 +1132,9 @@
      *
      * @function (arg1, arg2)
      * @private
-     * @param {Array}         the shp file buffer,
-     * @param {Number}        the position of the first item in the buffer,
-     * @returns {Array}       returns the Polyline/Polygon geometry,
+     * @param {Array}           the shp file buffer,
+     * @param {Number}          the position of the first item in the buffer,
+     * @returns {Array}         returns the Polyline/Polygon geometry,
      * @since 0.0.0
      */
     function _retrievePolyLine(buf, offset) {
@@ -893,10 +1198,10 @@
      *
      * @function (arg1, arg2)
      * @private
-     * @param {Array}         the shp file buffer,
-     * @param {Number}        the position of the first item in the buffer,
-     * @throws {Object}       throws an error if the shape contains no processed types,
-     * @returns {Array}       returns the extracted records,
+     * @param {Array}           the shp file buffer,
+     * @param {Number}          the position of the first item in the buffer,
+     * @throws {Object}         throws an error if the shape contains no processed types,
+     * @returns {Array}         returns the extracted records,
      * @since 0.0.0
     */
     function _extractRecords(buf, header) {
@@ -990,10 +1295,10 @@
      *
      * @function (arg1, arg2)
      * @private
-     * @param {Object}      the shp object,
-     * @param {Number}      the record to read,
-     * @throws {Object}     throws an error if the requested record is invalid,
-     * @returns {Array}     returns the requested record or all,
+     * @param {Object}          the shp object,
+     * @param {Number}          the record to read,
+     * @throws {Object}         throws an error if the requested record is invalid,
+     * @returns {Array}         returns the requested record or all,
      * @since 0.0.0
     */
     function _getRecord(shp, n) {
@@ -1020,15 +1325,15 @@
 
     // -- Public Static Methods ------------------------------------------------
 
-    SHT.SH = {
+    const SH = {
 
       /**
        * Decodes the file header.
        *
        * @method (arg1)
        * @public
-       * @param {Object}      the shp object,
-       * @returns {Object}    returns the decoded header,
+       * @param {Object}        the shp object,
+       * @returns {Object}      returns the decoded header,
        * @since 0.0.0
        */
       /* eslint-disable no-param-reassign */
@@ -1042,321 +1347,23 @@
        *
        * @method (arg1, arg2)
        * @public
-       * @param {Object}      the shp object,
-       * @param {Number}      the record to read,
-       * @returns {Array}     returns the requested record or all,
+       * @param {Object}        the shp object,
+       * @param {Number}        the record to read,
+       * @returns {Array}       returns the requested record or all,
        * @since 0.0.0
        */
       getRecord(shp, n) {
         return _getRecord(shp, n);
       },
     };
+
+
+    // -- Export
+    $__TREE.extend($__TREE.src.internal.shp, SH);
+
+    // IIFE END
   }());
   /* eslint-enable one-var, semi-style, no-underscore-dangle */
-
-
-  /* ***************************************************************************
-   *
-   * Defines the SHP object.
-   *
-   * shp.js is built upon the Prototypal Instantiation pattern. It
-   * returns an object by calling its constructor. It doesn't use the new
-   * keyword.
-   *
-   * Private Functions:
-   *  . none,
-   *
-   *
-   * Constructor:
-   *  . SHP                         creates and returns the SHP object,
-   *
-   *
-   * Public Static Methods:
-   *  . noConflict                  returns a reference to this SHP object,
-   *
-   *
-   * Private Methods:
-   *  . _getDbfRecord               returns a Dbf record,
-   *  . _getDbfHeader               returns the header of the Dbf file,
-   *  . _getDbfFieldDescriptor      returns the field descriptor of the Dbf file,
-   *  . _getShpRecord               returns a Shp record
-   *  . _getShpHeader               returns the header of the shp file,
-   *
-
-   * Public Methods:
-   *  . load                        loads the Natural Earth database,
-   *  . getCollection               returns a GeoJSON collection,
-   *  . getFeature                  returns the requested GeoJSON feature,
-   *  . getSource                   returns the name and the version of the db,
-   *
-   *
-   *
-   * @namespace    SHP
-   * @dependencies none
-   * @exports      -
-   * @author       -
-   * @since        0.0.0
-   * @version      -
-   * ************************************************************************ */
-  /* eslint-disable one-var, semi-style, no-underscore-dangle */
-
-  (function() {
-    // IIFE
-
-    // -- Module path
-
-
-    // -- Local modules
-    const { Util } = SHT
-        , { DBF }  = SHT
-        , { SH }   = SHT
-        ;
-
-
-    // -- Local constants
-    // Saves the previous value of the library variable, so that it can be
-    // restored later on, if noConflict is used.
-    const previousSHP = root.SHP
-        ;
-
-
-    // -- Local variables
-    let methods
-      ;
-
-
-    // -- Public ---------------------------------------------------------------
-
-    /**
-     * Returns the SHP object.
-     * (Prototypal Instantiation Pattern)
-     *
-     * @constructor (arg1)
-     * @public
-     * @param {String}        the argument to be saved as an object variable,
-     * @returns {Object}      returns the SHP object,
-     * @since 0.0.0
-     */
-    SHP = function() {
-      const obj = Object.create(methods);
-      obj._dbf = {
-        buf: null,
-        header: null,
-        fieldDescriptorArray: null,
-      };
-      obj._shp = {
-        buf: null,
-        header: null,
-      };
-      return obj;
-    };
-
-    // Attaches a constant to SHP that provides the version of the lib.
-    SHP.VERSION = '0.0.2';
-
-
-    // -- Public Static Methods ------------------------------------------------
-
-    /**
-     * Returns a reference to this SHP object.
-     *
-     * Nota:
-     * Running SHP in noConflic mode, returns the SHP variable to its
-     * previous owner.
-     *
-     * @method ()
-     * @public
-     * @param {}              -,
-     * @returns {String}      returns the SHP object,
-     * @since 0.0.0
-     */
-    /* istanbul ignore next */
-    SHP.noConflict = function() {
-      /* eslint-disable-next-line no-param-reassign */
-      root.SHP = previousSHP;
-      return this;
-    };
-
-
-    methods = {
-
-      // -- Private Methods ----------------------------------------------------
-
-      /**
-       * Returns a Dbf record.
-       *
-       * @method (arg1)
-       * @private
-       * @param {Number}       the record number,
-       * @returns {Object}     returns the requested Dbf record,
-       * @since 0.0.0
-       */
-      _getDbfRecord(n) {
-        return DBF.getRecord(this._dbf, n);
-      },
-
-      /**
-       * Returns the header of the Dbf file.
-       *
-       * @method ()
-       * @private
-       * @param {}            -,
-       * @returns {Object}    return the header,
-       * @since 0.0.0
-       */
-      _getDbfHeader() {
-        return this._dbf.header;
-      },
-
-      /**
-       * Returns the field Descriptor of the Dbf file.
-       *
-       * @method ()
-       * @private
-       * @param {}            -,
-       * @returns {Object}    returns the field Descriptor,
-       * @since 0.0.0
-       */
-      _getDbfFieldDescriptor() {
-        return this._dbf.fieldDescriptorArray;
-      },
-
-      /**
-       * Returns a Shp record.
-       *
-       * @method (arg1)
-       * @private
-       * @param {Number}      the requested record,
-       * @returns {Object}    returns the requested record,
-       * @since 0.0.0
-       */
-      _getShpRecord(n) {
-        return SH.getRecord(this._shp, n);
-      },
-
-      /**
-       * Returns the header of the shp file.
-       *
-       * @method ()
-       * @private
-       * @param {}            -,
-       * @returns {Object}    returns the header,
-       * @since 0.0.0
-       */
-      _getShpHeader() {
-        return this._shp.header;
-      },
-
-
-      // -- Public Methods -----------------------------------------------------
-
-      /**
-       * Loads the Natural Earth database.
-       *
-       * @method (arg1, arg2)
-       * @public
-       * @param {String}      the database path,
-       * @param {Function}    the function to call at the completion,
-       * @returns {Object}    returns a promise,
-       * @since 0.0.0
-       */
-
-      load(db, callback) {
-        return new Promise((resolve) => {
-          Util.load(db, (data) => {
-            [this._dbf.buf] = data;
-            [, this._shp.buf] = data;
-            [,, this._source] = data;
-            DBF.decode(this._dbf);
-            SH.decode(this._shp);
-            resolve();
-            if (callback) callback();
-          });
-        });
-      },
-
-      /**
-       * Returns a GeoJSON collection.
-       *
-       * @method ()
-       * @public
-       * @param {}            -,
-       * @returns {Object}    returns a collection,
-       * @since 0.0.0
-       */
-      getCollection() {
-        const { header } = this._shp
-            , dbfrecord  = this._getDbfRecord()
-            , shprecord  = this._getShpRecord()
-            ;
-
-        const collection = {
-          bbox: [header.Xmin, header.Ymin, header.Xmax, header.Ymax],
-          type: 'FeatureCollection',
-          features: [],
-        };
-
-        for (let i = 0; i < this._dbf.header.numberOfRecords; i++) {
-          collection.features[i] = {
-            type: 'Feature',
-            properties: dbfrecord[i],
-            geometry: {
-              type: shprecord[i].type,
-              coordinates: shprecord[i].coordinates,
-            },
-          };
-        }
-        return collection;
-      },
-
-      /**
-       * Returns the requested GeoJSON feature.
-       *
-       * @method (arg1)
-       * @public
-       * @param {Number}      the requested feature,
-       * @returns {Object}    returns a GeoJON feature,
-       * @since 0.0.0
-       */
-      getFeature(n) {
-        // Is this record available?
-        if (typeof n !== 'number'
-            || n % 1 !== 0
-            || n <= 0
-            || n > this._dbf.header.numberOfRecords) {
-          throw new Error(`The record Number "${n}" does not match!`);
-        }
-
-        const record = SH.getRecord(this._shp, n);
-        return {
-          type: 'Feature',
-          properties: DBF.getRecord(this._dbf, n),
-          geometry: {
-            type: record.type,
-            coordinates: record.coordinates,
-          },
-        };
-      },
-
-      /**
-       * Returns the name and the version of the Natural Earth database.
-       *
-       * @method ()
-       * @public
-       * @param {}            -,
-       * @returns {Object}    returns the data source,
-       * @since 0.0.0
-       */
-      getSource() {
-        return {
-          name: this._source.db,
-          version: this._source.version,
-        };
-      },
-    };
-  }());
-  /* eslint-enable one-var, semi-style, no-underscore-dangle */
-
 
   // Returns the library name:
   return SHP;

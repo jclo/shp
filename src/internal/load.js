@@ -1,4 +1,4 @@
-/* ***************************************************************************
+/** **************************************************************************
  *
  * A set of primitives to download Natural Earth database files.
  *
@@ -15,127 +15,128 @@
  *
  *
  *
- * @namespace    SHT.Util
+ * @namespace    SHP.src.internal.load
  * @dependencies none
  * @exports      -
  * @author       -
  * @since        0.0.0
  * @version      -
  * ************************************************************************ */
+/* global */
 /* eslint-disable one-var, semi-style, no-underscore-dangle */
 
-'use strict';
-
-(function() {
-  // IIFE
-
-  // -- Module path
+// IIFE_START
 
 
-  // -- Local modules
+// -- Local modules
 
 
-  // -- Local constants
+// -- Local constants
 
 
-  // -- Local variables
+// -- Local variables
 
 
-  // -- Private Functions ----------------------------------------------------
+// -- Private Functions ----------------------------------------------------
 
-  /**
-   * Loads the requested file.
-   *
-   * @function (arg1, arg2, arg3)
-   * @private
-   * @param {String}        the file url,
-   * @param {String}        the type of file (json or binary),
-   * @param {Function}      the function to call at the completion,
-   * @throws {Object}       throws an error if the type isn't supported,
-   * @returns {String}      returns a string,
-   * @since 0.0.0
-  */
-  const _XMLHttpRequest = function(url, type, callback) {
-    const xhr = new window.XMLHttpRequest();
+/**
+ * Loads the requested file.
+ *
+ * @function (arg1, arg2, arg3)
+ * @private
+ * @param {String}          the file url,
+ * @param {String}          the type of file (json or binary),
+ * @param {Function}        the function to call at the completion,
+ * @throws {Object}         throws an error if the type isn't supported,
+ * @returns {String}        returns a string,
+ * @since 0.0.0
+*/
+const _XMLHttpRequest = function(url, type, callback) {
+  const xhr = new window.XMLHttpRequest();
 
-    xhr.onreadystatechange = function() {
-      let byteArray
-        ;
+  xhr.onreadystatechange = function() {
+    let byteArray
+      ;
 
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200 || xhr.status === 0) {
-          switch (type) {
-            case 'json':
-              callback(false, xhr, xhr.responseText);
-              break;
-            case 'bin':
-              byteArray = new Uint8Array(xhr.response);
-              callback(false, xhr, byteArray);
-              break;
-            default:
-              throw new Error(`load: the type "${type}" is unknown!`);
-          }
-        } else {
-          callback(true, xhr);
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200 || xhr.status === 0) {
+        switch (type) {
+          case 'json':
+            callback(false, xhr, xhr.responseText);
+            break;
+          case 'bin':
+            byteArray = new Uint8Array(xhr.response);
+            callback(false, xhr, byteArray);
+            break;
+          default:
+            throw new Error(`load: the type "${type}" is unknown!`);
         }
+      } else {
+        callback(true, xhr);
       }
-    };
-
-    switch (type) {
-      case 'json':
-        xhr.open('GET', url, true);
-        xhr.send(null);
-        break;
-      case 'bin':
-        xhr.open('GET', url, true);
-        xhr.responseType = 'arraybuffer';
-        xhr.send(null);
-        break;
-      default:
-        throw new Error(`_load: the type "${type}" is unknown!`);
     }
   };
+
+  switch (type) {
+    case 'json':
+      xhr.open('GET', url, true);
+      xhr.send(null);
+      break;
+    case 'bin':
+      xhr.open('GET', url, true);
+      xhr.responseType = 'arraybuffer';
+      xhr.send(null);
+      break;
+    default:
+      throw new Error(`_load: the type "${type}" is unknown!`);
+  }
+};
+
+/**
+ * Loads the database.
+ *
+ * @function (arg1, arg2)
+ * @private
+ * @param {String}          the database path,
+ * @param {Function}        the function to call at the completion,
+ * @returns {}              -,
+ * @since 0.0.0
+*/
+function _load(db, callback) {
+  const name = db.split('/').pop();
+
+  _XMLHttpRequest(`${db}/${name}.dbf`, 'bin', (err, xhr, dbf) => {
+    _XMLHttpRequest(`${db}/${name}.shp`, 'bin', (err2, xhr2, shp) => {
+      _XMLHttpRequest(`${db}/${name}.VERSION.txt`, 'json', (err3, xhr3, version) => {
+        callback([dbf, shp, { db: name, version: version.replace(/[^\d.]/gi, '') }]);
+      });
+    });
+  });
+}
+
+
+// -- Public Static Methods ------------------------------------------------
+
+const Util = {
 
   /**
    * Loads the database.
    *
-   * @function (arg1, arg2)
-   * @private
+   * @method (arg1, arg2)
+   * @public
    * @param {String}        the database path,
    * @param {Function}      the function to call at the completion,
    * @returns {}            -,
    * @since 0.0.0
-  */
-  function _load(db, callback) {
-    const name = db.split('/').pop();
-
-    _XMLHttpRequest(`${db}/${name}.dbf`, 'bin', (err, xhr, dbf) => {
-      _XMLHttpRequest(`${db}/${name}.shp`, 'bin', (err2, xhr2, shp) => {
-        _XMLHttpRequest(`${db}/${name}.VERSION.txt`, 'json', (err3, xhr3, version) => {
-          callback([dbf, shp, { db: name, version: version.replace(/[^\d.]/gi, '') }]);
-        });
-      });
-    });
-  }
+   */
+  load(db, callback) {
+    _load(db, callback);
+  },
+};
 
 
-  // -- Public Static Methods ------------------------------------------------
+// -- Export
+export default Util;
 
-  SHT.Util = {
-
-    /**
-     * Loads the database.
-     *
-     * @method (arg1, arg2)
-     * @public
-     * @param {String}      the database path,
-     * @param {Function}    the function to call at the completion,
-     * @returns {}          -,
-     * @since 0.0.0
-     */
-    load(db, callback) {
-      _load(db, callback);
-    },
-  };
-}());
+// IIFE_END
 /* eslint-enable one-var, semi-style, no-underscore-dangle */
