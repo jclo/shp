@@ -12,8 +12,9 @@ const { src, dest, series } = require('gulp')
 
 
 // -- Local modules
-const config = require('./config')
-   ;
+const pack   = require('../package.json')
+    , config = require('./config')
+    ;
 
 
 // -- Local constants
@@ -26,6 +27,7 @@ const destination  = config.libdir
     , name         = lib.replace(/\s+/g, '').toLowerCase()
     , { parent }   = config
     , { noparent } = config
+    , { version }  = pack
     ;
 
 
@@ -46,7 +48,8 @@ function clean(done) {
 // by and UMD module).
 function dolibnoparent() {
   return src(core)
-    .pipe(replace(/\/\* global[\w\s,]+\*\//g, '/* - */'))
+    .pipe(replace(/\/\* global[\w$_\s,]+\*\//g, '/* - */'))
+    .pipe(replace('{{lib:version}}', version))
     .pipe(modulify(`${name}${noparent}.js`, {
       header: fs.readFileSync(header, 'utf8'),
       footer: fs.readFileSync(footer, 'utf8'),

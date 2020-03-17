@@ -16,8 +16,8 @@ const filesToWatch = ['src/**/*.js', 'src/_header', 'src/_footer']
 
 
 // -- Gulp Private Tasks
-const build       = require('./tasks/makejs')
-    , makedist    = require('./tasks/makedist')
+const build    = require('./tasks/makejs')
+    , makedist = require('./tasks/makedist')
     ;
 
 
@@ -26,21 +26,35 @@ function fwatch() {
   watch(filesToWatch, series(build));
 }
 
-// -- Gulp connect:
-function server(cb) {
+// -- Gulp connect dev
+function devserver(done) {
   connect.server({
+    host: '0.0.0.0', // (allows remote access)
     root: './',
-    port: 8088,
+    port: 8888,
     livereload: true,
   });
-  open('http://localhost:8088/');
-  cb();
+  open('http://localhost:8888/');
+  done();
+}
+
+// -- Gulp connect prod
+function appserver(done) {
+  connect.server({
+    host: '0.0.0.0', // (allows remote access)
+    root: './_dist',
+    port: 8889,
+    livereload: true,
+  });
+  open('http://localhost:8889/');
+  done();
 }
 
 
 // Gulp Public Tasks:
 exports.watch = fwatch;
 exports.build = build;
-exports.connect = server;
+exports.rundev = devserver;
 exports.makedist = makedist;
+exports.runapp = appserver;
 exports.default = series(build, makedist);

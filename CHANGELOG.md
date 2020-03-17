@@ -1,5 +1,11 @@
 ### HEAD
 
+### 0.0.4 (March 17, 2020)
+
+  * Updated the project dependencies,
+  * ...,
+
+
 ### 0.0.3 (December 27, 2019)
 
   * Replaced the template ES6lib by ES6libplus,
