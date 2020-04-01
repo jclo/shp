@@ -1,5 +1,5 @@
 /*! ****************************************************************************
- * SHP v0.0.5-beta.1
+ * SHP v0.0.5
  *
  * A library for reading Natural Earth's SHP files.
  * (you can download it from npm or github repositories)
@@ -142,7 +142,7 @@
     };
 
     // Attaches a constant to SHP that provides the version of the lib.
-    SHP.VERSION = '0.0.5-beta.1';
+    SHP.VERSION = '0.0.5';
 
 
     // -- Public Static Methods ------------------------------------------------
