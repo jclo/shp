@@ -1,4 +1,4 @@
-/** **************************************************************************
+/** ************************************************************************
  *
  * A set of primitives to process the DBF files.
  *
@@ -24,11 +24,12 @@
  * @author       -
  * @since        0.0.0
  * @version      -
- * ************************************************************************ */
+ * ********************************************************************** */
 /* global */
 /* eslint-disable one-var, semi-style, no-underscore-dangle */
 
-// IIFE_START
+
+// -- Vendor Modules
 
 
 // -- Local modules
@@ -170,7 +171,9 @@ function _retrieveRecord(buf, header, fieldDescriptorArray, number) {
         throw new Error('Field Data Type "M" not processed yet!');
 
       default:
-        throw new Error(`Field Data Type ${fieldDescriptorArray[i].type} is not supported!`);
+        throw new Error(
+          `Field Data Type ${fieldDescriptorArray[i].type} is not supported!`,
+        );
     }
     offset += fieldDescriptorArray[i].length;
   }
@@ -200,7 +203,9 @@ function _getRecord(dbf, number) {
   // Check that this record number is an integer and in the range:
   if (number % 1 === 0 && number > 0 && number <= dbf.header.numberOfRecords) {
     // Return the requested record:
-    const recordn = _retrieveRecord(dbf.buf, dbf.header, dbf.fieldDescriptorArray, number - 1);
+    const recordn = _retrieveRecord(
+      dbf.buf, dbf.header, dbf.fieldDescriptorArray, number - 1,
+    );
     return recordn;
   }
   return null;
@@ -247,5 +252,4 @@ const DBF = {
 // -- Export
 export default DBF;
 
-// IIFE_END
 /* eslint-disable one-var, semi-style, no-underscore-dangle */

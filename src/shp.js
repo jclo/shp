@@ -1,4 +1,4 @@
-/** **************************************************************************
+/** ************************************************************************
  *
  * Defines the SHP object.
  *
@@ -25,7 +25,7 @@
  *  . _getShpRecord               returns a Shp record
  *  . _getShpHeader               returns the header of the shp file,
  *
-
+ *
  * Public Methods:
  *  . load                        loads the Natural Earth database,
  *  . getCollection               returns a GeoJSON collection,
@@ -40,27 +40,28 @@
  * @author       -
  * @since        0.0.0
  * @version      -
- * ************************************************************************ */
+ * ********************************************************************** */
 /* global root */
 /* eslint-disable one-var, semi-style, no-underscore-dangle */
 
-// IIFE_START
+
+// -- Vendor Modules
 
 
-// -- Local modules
+// -- Local Modules
 import Util from './internal/load';
 import DBF from './internal/dbf';
 import SH from './internal/shp';
 
 
-// -- Local constants
+// -- Local Constants
 // Saves the previous value of the library variable, so that it can be
 // restored later on, if noConflict is used.
 const previousSHP = root.SHP
     ;
 
 
-// -- Local variables
+// -- Local Variables
 let methods
   ;
 
@@ -77,7 +78,7 @@ let methods
  * @returns {Object}        returns the SHP object,
  * @since 0.0.0
  */
-SHP = function() {
+const SHP = function() {
   const obj = Object.create(methods);
   obj._dbf = {
     buf: null,
@@ -107,7 +108,7 @@ SHP.VERSION = '{{lib:version}}';
  * @method ()
  * @public
  * @param {}                -,
- * @returns {String}        returns the SHP object,
+ * @returns {Object}        returns the SHP object,
  * @since 0.0.0
  */
 /* istanbul ignore next */
@@ -297,7 +298,6 @@ methods = {
 
 
 // -- Export
-// none (SHP is attached to the global window)
+export default SHP;
 
-// IIFE_END
 /* eslint-enable one-var, semi-style, no-underscore-dangle */

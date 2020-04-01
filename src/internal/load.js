@@ -1,4 +1,4 @@
-/** **************************************************************************
+/** ************************************************************************
  *
  * A set of primitives to download Natural Earth database files.
  *
@@ -21,11 +21,12 @@
  * @author       -
  * @since        0.0.0
  * @version      -
- * ************************************************************************ */
+ * ********************************************************************** */
 /* global */
 /* eslint-disable one-var, semi-style, no-underscore-dangle */
 
-// IIFE_START
+
+// -- Vendor Modules
 
 
 // -- Local modules
@@ -138,5 +139,4 @@ const Util = {
 // -- Export
 export default Util;
 
-// IIFE_END
 /* eslint-enable one-var, semi-style, no-underscore-dangle */

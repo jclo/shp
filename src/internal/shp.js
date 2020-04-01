@@ -1,4 +1,4 @@
-/** **************************************************************************
+/** ************************************************************************
  *
  * A set of primitives to process the SHP files.
  *
@@ -48,11 +48,12 @@
  * @author       -
  * @since        0.0.0
  * @version      -
- * ************************************************************************ */
+ * ********************************************************************** */
 /* global */
 /* eslint-disable one-var, semi-style, no-underscore-dangle */
 
-// IIFE_START
+
+// -- Vendor Modules
 
 
 // -- Local modules
@@ -103,17 +104,23 @@ function _getHeader(buf) {
 
   // Check if file starts with pattern '9994'.
   if (header.code !== 9994) {
-    throw new Error(`This is not a SHP file! The first four bytes are: "${header.code}" instead of "9994"`);
+    throw new Error(
+      `This is not a SHP file! The first four bytes are: "${header.code}" instead of "9994"`,
+    );
   }
 
   // Check if 'Z' is equal to zero
   if (header.Zmin !== 0 || header.Zmax !== 0) {
-    throw new Error('SHP files with Z type != zero are not supported!');
+    throw new Error(
+      'SHP files with Z type != zero are not supported!',
+    );
   }
 
   // Check if 'M' is equal to zero
   if (header.Mmin !== 0 || header.Mmax !== 0) {
-    throw new Error('SHP files with points having M Measure are not supported!');
+    throw new Error(
+      'SHP files with points having M Measure are not supported!',
+    );
   }
 
   return header;
@@ -371,5 +378,4 @@ const SH = {
 // -- Export
 export default SH;
 
-// IIFE_END
 /* eslint-enable one-var, semi-style, no-underscore-dangle */

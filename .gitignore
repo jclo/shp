@@ -1,10 +1,9 @@
 .DS_Store
 __trash
-_old
 _old_*
+
 .nyc_output
 coverage
-db
 node_modules
 
-lib/shp-noparent.js
+db

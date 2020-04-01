@@ -30,10 +30,10 @@
       document.addEventListener('DOMContentLoaded', () => {
         async function run() {
           const shp = SHP();
-          await shp.load('../db/ne_110m_admin_0_countries');
+          await shp.load('./db/ne_110m_admin_0_countries');
           const collection = shp.getCollection();
           const feature = shp.getFeature(1);
-          console.log(JSON.stringify(collection));
+          console.log(collection);
         }
 
         run();

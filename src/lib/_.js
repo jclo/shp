@@ -1,4 +1,4 @@
-/** **************************************************************************
+/** ************************************************************************
  *
  * A set of utility primitives to read an ArrayBuffer.
  *
@@ -26,11 +26,12 @@
  * @author       -
  * @since        0.0.0
  * @version      -
- * ************************************************************************ */
+ * ********************************************************************** */
 /* global */
 /* eslint-disable one-var, semi-style, no-underscore-dangle */
 
-// IIFE_START
+
+// -- Vendor Modules
 
 
 // -- Local modules
@@ -74,14 +75,18 @@ function _readUTF8String(buf, start, stop) {
       i += 1;
     } else if (c > 191 && c < 224) {
       if (i + 1 >= len) {
-        throw new Error('UTF-8 Decode failed. Two byte character was truncated.');
+        throw new Error(
+          'UTF-8 Decode failed. Two byte character was truncated.',
+        );
       }
       c1 = buf[start + i + 1];
       s += String.fromCharCode(((c & 0x1f) << 6) | (c1 & 0x3f));
       i += 2;
     } else {
       if (i + 2 >= len) {
-        throw new Error('UTF-8 Decode failed. Two byte character was truncated.');
+        throw new Error(
+          'UTF-8 Decode failed. Two byte character was truncated.',
+        );
       }
       c1 = buf[start + i + 1];
       c2 = buf[start + i + 2];
@@ -222,5 +227,4 @@ const underscore = {
 // -- Export
 export default underscore;
 
-// IIFE_END
 /* eslint-enable one-var, semi-style, no-underscore-dangle */

@@ -1,37 +1,30 @@
 /* eslint  one-var: 0, import/no-extraneous-dependencies: 0, semi-style: 0 */
 
 
-// -- Node modules
+// -- Vendor Modules
 const { src, dest, series } = require('gulp')
-    , fs       = require('fs')
-    , del      = require('del')
-    , concat   = require('gulp-concat')
-    , modulify = require('gulp-modulify')
-    , replace  = require('gulp-replace')
+    , del     = require('del')
+    , concat  = require('gulp-concat')
+    , Kadoo   = require('kadoo')
+    , replace = require('gulp-replace')
     ;
 
 
-// -- Local modules
+// -- Local Modules
 const pack   = require('../package.json')
     , config = require('./config')
     ;
 
 
-// -- Local constants
-const destination  = config.libdir
-    , source       = config.src
-    , { header }   = source
-    , { core }     = source
-    , { footer }   = source
-    , lib          = config.libname
-    , name         = lib.replace(/\s+/g, '').toLowerCase()
-    , { parent }   = config
-    , { noparent } = config
-    , { version }  = pack
+// -- Local Constants
+const destination = config.libdir
+    , { source }  = config
+    , { name }    = config
+    , { version } = pack
     ;
 
 
-// -- Local variables
+// -- Local Variables
 
 
 // -- Gulp Private Tasks
@@ -43,30 +36,39 @@ function clean(done) {
 }
 
 // Creates the library.
-// (it removes the intermediates 'global', encapsulates the code
-// of each file into an IIFE module and finally surround the complete code
-// by and UMD module).
-function dolibnoparent() {
-  return src(core)
-    .pipe(replace(/\/\* global[\w$_\s,]+\*\//g, '/* - */'))
+function dolib() {
+  const kadoo = Kadoo(source);
+
+  return kadoo.bundle()
     .pipe(replace('{{lib:version}}', version))
-    .pipe(modulify(`${name}${noparent}.js`, {
-      header: fs.readFileSync(header, 'utf8'),
-      footer: fs.readFileSync(footer, 'utf8'),
-    }))
+    .pipe(concat(`${name}.js`))
     .pipe(dest(destination))
   ;
 }
 
-// Creates the library.
-function dolib() {
-  return src(`${destination}/${name}${noparent}.js`)
-    .pipe(replace('{{lib:parent}}', parent))
-    .pipe(concat(`${name}.js`))
+// Remove extra global.
+// (keep the first global only)
+function rmextraglob() {
+  return src(`${destination}/${name}.js`)
+    .pipe(replace(/\/\* global/, '/* gloobal'))
+    .pipe(replace(/\/\* global[\w$_\s,]+\*\//g, '/* - */'))
+    .pipe(replace(/\/\* gloobal/, '/* global'))
+    .pipe(dest(destination))
+  ;
+}
+
+// Remove extra 'use strict'.
+// (keep the two first only)
+function rmextrastrict() {
+  return src(`${destination}/${name}.js`)
+    .pipe(replace(/use strict/, 'use_strict'))
+    .pipe(replace(/use strict/, 'use_strict'))
+    .pipe(replace(/'use strict';/g, '/* - */'))
+    .pipe(replace(/use_strict/g, 'use strict'))
     .pipe(dest(destination))
   ;
 }
 
 
 // -- Gulp Public Task(s)
-module.exports = series(clean, dolibnoparent, dolib);
+module.exports = series(clean, dolib, rmextraglob, rmextrastrict);

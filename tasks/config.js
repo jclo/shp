@@ -1,20 +1,21 @@
 /* eslint one-var: 0, semi-style: 0 */
 
 
-// -- Vendor modules
+// -- Vendor Modules
 
 
-// -- Local modules
+// -- Local Modules
 const pack = require('../package.json');
 
 
-// -- Local constants
+// -- Local Constants
 const libname = 'SHP'
     , name    = libname.replace(/\s+/g, '').toLowerCase()
+    , source  = './src/shp.js'
     ;
 
 
-// -- Local variables
+// -- Local Variables
 
 
 // -- Main
@@ -23,31 +24,15 @@ module.exports = {
   dist: './_dist',
   libdir: './lib',
   libname,
-  parent: 'this',
-  noparent: '-noparent',
+  name,
+
+  // This is the entry javascript file of your library. Choose one
+  // pattern among these ones. The files 'basic.js', 'functional.js',
+  // 'functional-shared.js', 'prototypal.js', 'pseudoclassical.js' and
+  // 'pseudoclassical-auto.js' are mutually exclusives.
+  source,
   index: './index.js',
   distlink: `./_dist/lib/${name}.js`,
-
-  // These are the Javascript files required to build the library.
-  /* eslint-disable no-multi-spaces */
-  src: {
-    // This is the header section of the UMD module:
-    header: './src/_header',
-
-    // This is the code of the library that is surrounded by the UMD module
-    // header and footer.
-    core: [
-      './src/shp.js',
-      './src/lib/_.js',
-      './src/internal/load.js',
-      './src/internal/dbf.js',
-      './src/internal/shp.js',
-    ],
-
-    // This is the footer section of the UMD module:
-    footer: './src/_footer',
-  },
-  /* eslint-enable no-multi-spaces */
 
   get license() {
     return ['/*! ****************************************************************************',
@@ -58,7 +43,7 @@ module.exports = {
       ` * Copyright (c) ${(new Date()).getFullYear()} ${pack.author.name} <${pack.author.email}> (${pack.author.url}).`,
       ' * Released under the MIT license. You may obtain a copy of the License',
       ' * at: http://www.opensource.org/licenses/mit-license.php).',
-      ' * Built from ES6libplus v0.0.6.',
+      ' * Built from ES6Kadoo v0.0.0-beta.1.',
       ' * ************************************************************************** */',
       ''].join('\n');
   },
