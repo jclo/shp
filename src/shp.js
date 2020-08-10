@@ -14,6 +14,10 @@
  *  . SHP                         creates and returns the SHP object,
  *
  *
+ * Private Static Methods:
+ *  . _setTestMode                returns internal objects for testing purpose,
+ *
+ *
  * Public Static Methods:
  *  . noConflict                  returns a reference to this SHP object,
  *
@@ -34,7 +38,7 @@
  *
  *
  *
- * @namespace    SHP
+ * @namespace    -
  * @dependencies none
  * @exports      -
  * @author       -
@@ -72,7 +76,7 @@ let methods
  * Returns the SHP object.
  * (Prototypal Instantiation Pattern)
  *
- * @constructor (arg1)
+ * @constructor ()
  * @public
  * @param {String}          the argument to be saved as an object variable,
  * @returns {Object}        returns the SHP object,
@@ -80,6 +84,10 @@ let methods
  */
 const SHP = function() {
   const obj = Object.create(methods);
+  obj.library = {
+    name: '{{lib:name}}',
+    version: '{{lib:version}}',
+  };
   obj._dbf = {
     buf: null,
     header: null,
@@ -94,6 +102,22 @@ const SHP = function() {
 
 // Attaches a constant to SHP that provides the version of the lib.
 SHP.VERSION = '{{lib:version}}';
+
+
+// -- Private Static Methods -----------------------------------------------
+
+/**
+ * Returns the internal objects for testing purpose.
+ *
+ * @method ()
+ * @private
+ * @param {}                -,
+ * @returns {Object}        returns a list of internal objects,
+ * @since 0.0.0
+ */
+SHP._setTestMode = function() {
+  return [];
+};
 
 
 // -- Public Static Methods ------------------------------------------------

@@ -42,7 +42,7 @@
  *
  *
  *
- * @namespace    SHP.src.internal.shp
+ * @namespace    -
  * @dependencies none
  * @exports      -
  * @author       -

@@ -20,7 +20,7 @@
  *
  *
  *
- * @namespace    SHP.src.lib._
+ * @namespace    -
  * @dependencies none
  * @exports      -
  * @author       -

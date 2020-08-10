@@ -18,7 +18,7 @@
  *
  *
  *
- * @namespace    SHP.src.internal.dbf
+ * @namespace    -
  * @dependencies none
  * @exports      -
  * @author       -

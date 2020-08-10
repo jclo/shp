@@ -1,5 +1,11 @@
 ### HEAD
 
+### 0.0.6 (August 10, 2020)
+
+  * Updated the project template,
+  * ...,
+
+
 ### 0.0.5 (April 1, 2020)
 
   * Updated the project with the boilerplate ES6Kadoo,

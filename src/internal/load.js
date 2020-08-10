@@ -15,7 +15,7 @@
  *
  *
  *
- * @namespace    SHP.src.internal.load
+ * @namespace    -
  * @dependencies none
  * @exports      -
  * @author       -
