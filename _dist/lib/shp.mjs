@@ -1,5 +1,5 @@
 /*! ****************************************************************************
- * SHP v0.0.7
+ * SHP v0.0.8
  *
  * A library for reading Natural Earth's SHP files.
  * (you can download it from npm or github repositories)
@@ -138,7 +138,7 @@ const $__ES6GLOB = {};
       const obj = Object.create(methods);
       obj._library = {
         name: 'SHP',
-        version: '0.0.7',
+        version: '0.0.8',
       };
       obj._dbf = {
         buf: null,
@@ -155,7 +155,7 @@ const $__ES6GLOB = {};
 
     // Attaches constants to SHP that provide name and version of the lib.
     SHP.NAME = 'SHP';
-    SHP.VERSION = '0.0.7';
+    SHP.VERSION = '0.0.8';
 
 
     // -- Private Static Methods -----------------------------------------------

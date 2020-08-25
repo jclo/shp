@@ -1,5 +1,11 @@
 ### HEAD
 
+### 0.0.8 (August 25, 2020)
+
+  * Added an example that shows how to display a GeoJSON map inside a browser (test/index.html),
+  * ...,
+
+
 ### 0.0.7 (August 25, 2020)
 
   * Added the method _load,
