@@ -73,9 +73,23 @@ A `Natural Earth`'s database is a folder that contains, at least, three files ha
 
 This module implements three methods:
 
+  * whoami()
+  * load(database path)
   * getFeature(feature number),
   * getCollection(),
   * getSource(),
+
+
+### whoami()
+
+This method returns the library name and version.
+
+
+### load(path)
+
+This method loads the Natural Earth' database.
+
+This method requires one argument, the path to the database.  
 
 
 ### getFeature(n)

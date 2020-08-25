@@ -1,5 +1,11 @@
 ### HEAD
 
+### 0.0.7 (August 25, 2020)
+
+  * Added the method _load,
+  * ...,
+
+
 ### 0.0.6 (August 10, 2020)
 
   * Updated the project template,

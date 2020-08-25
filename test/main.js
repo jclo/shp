@@ -1,46 +1,38 @@
 // ESLint declarations:
-/* global describe, it */
-/* eslint one-var: 0, no-unused-vars: 0, semi-style: 0 */
+/* global describe */
+/* eslint one-var: 0, semi-style: 0 */
 
 
 // -- Vendor Modules
-const should     = require('chai').should()
-    , { expect } = require('chai')
-    ;
 
 
 // -- Local Modules
-const SHP = require('../src/shp.js').default
+const // SHP = require('../index')
+    SHP = require('../src/shp').default
+    , pack     = require('../package.json')
+    , testlib  = require('./int/lib')
     ;
 
 
 // -- Local Constants
+const libname = 'SHP';
 
 
 // -- Local Variables
 
 
 // -- Main
+
+// Nota:
+// If you choose 'SHP = require('../index')', 'display-coverage' will
+// show the coverage of all the library in one file.
+//
+// If you want to display the coverage file by file, you must choose
+// 'SHP = require('../src/prototypal').default'. But, in this case,
+// the build isn't done, so you should pass '{{lib:name}}' as libname and
+// '{{lib:version}}' as the library version.
+
 describe('Test SHP:', () => {
-  // Test the lib:
-  describe('Test SHP.VERSION and SHP.noConflict:', () => {
-    it('Expects SHP.VERSION to return a string.', () => {
-      expect(SHP.VERSION).to.be.a('string');
-    });
-    it('Expects SHP.noConflict to return a function.', () => {
-      expect(SHP.noConflict).to.be.a('function');
-    });
-  });
-
-  describe('Test SHP constructor and methods:', () => {
-    const o = SHP();
-
-    it('Expects SHP() to return an object.', () => {
-      expect(o).to.be.an('object');
-    });
-
-    it('Expects this object to own the property "load" that is a function.', () => {
-      expect(o).to.have.property('load').that.is.a('function');
-    });
-  });
+  testlib(SHP, '{{lib:name}}', '{{lib:version}}');
+  // testlib(SHP, libname, pack.version);
 });

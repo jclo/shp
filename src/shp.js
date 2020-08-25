@@ -28,9 +28,11 @@
  *  . _getDbfFieldDescriptor      returns the field descriptor of the Dbf file,
  *  . _getShpRecord               returns a Shp record
  *  . _getShpHeader               returns the header of the shp file,
+ *  . _load                       imports data loaded externally,
  *
  *
  * Public Methods:
+ *  . whoami                      returns the library name and version,
  *  . load                        loads the Natural Earth database,
  *  . getCollection               returns a GeoJSON collection,
  *  . getFeature                  returns the requested GeoJSON feature,
@@ -78,13 +80,13 @@ let methods
  *
  * @constructor ()
  * @public
- * @param {String}          the argument to be saved as an object variable,
+ * @param {}                -,
  * @returns {Object}        returns the SHP object,
  * @since 0.0.0
  */
 const SHP = function() {
   const obj = Object.create(methods);
-  obj.library = {
+  obj._library = {
     name: '{{lib:name}}',
     version: '{{lib:version}}',
   };
@@ -97,10 +99,12 @@ const SHP = function() {
     buf: null,
     header: null,
   };
+  obj._source = null;
   return obj;
 };
 
-// Attaches a constant to SHP that provides the version of the lib.
+// Attaches constants to SHP that provide name and version of the lib.
+SHP.NAME = '{{lib:name}}';
 SHP.VERSION = '{{lib:version}}';
 
 
@@ -108,6 +112,7 @@ SHP.VERSION = '{{lib:version}}';
 
 /**
  * Returns the internal objects for testing purpose.
+ * (must not be deleted)
  *
  * @method ()
  * @private
@@ -124,9 +129,10 @@ SHP._setTestMode = function() {
 
 /**
  * Returns a reference to this SHP object.
+ * (must not be deleted)
  *
  * Nota:
- * Running SHP in noConflic mode, returns the SHP variable to
+ * Running SHP in noConflict mode, returns the SHP variable to
  * its previous owner.
  *
  * @method ()
@@ -135,7 +141,6 @@ SHP._setTestMode = function() {
  * @returns {Object}        returns the SHP object,
  * @since 0.0.0
  */
-/* istanbul ignore next */
 SHP.noConflict = function() {
   /* eslint-disable-next-line no-param-reassign */
   root.SHP = previousSHP;
@@ -212,8 +217,40 @@ methods = {
     return this._shp.header;
   },
 
+  /**
+   * imports data loaded externally.
+   *
+   * @method ()
+   * @private
+   * @param {}              -,
+   * @returns {Object}      returns the header,
+   * @since 0.0.0
+   */
+  _load(data) {
+    [this._dbf.buf] = data;
+    [, this._shp.buf] = data;
+    [,, this._source] = data;
+    DBF.decode(this._dbf);
+    SH.decode(this._shp);
+  },
+
 
   // -- Public Methods -----------------------------------------------------
+
+
+  /**
+   * Returns the library name and version.
+   * (must not be deleted)
+   *
+   * @method ()
+   * @public
+   * @param {}              -,
+   * @returns {Object}      returns the library name and version,
+   * @since 0.0.0
+   */
+  whoami() {
+    return this._library;
+  },
 
   /**
    * Loads the Natural Earth database.
