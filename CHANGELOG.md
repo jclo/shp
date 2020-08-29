@@ -1,5 +1,11 @@
 ### HEAD
 
+### 1.0.0 (August 29, 2020)
+
+  * Updated the project dependencies,
+  * ...,
+
+
 ### 0.0.8 (August 25, 2020)
 
   * Added an example that shows how to display a GeoJSON map inside a browser (test/index.html),

@@ -1,6 +1,6 @@
 {
   "name": "@mobilabs/shp",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "description": "A library for reading Natural Earth's SHP files",
   "main": "_dist/lib/shp.js",
   "minified": "_dist/lib/shp.min.js",
@@ -54,11 +54,12 @@
     "gulp-replace": "^1.0.0",
     "gulp-uglify-es": "^2.0.0",
     "husky": "^4.2.5",
-    "kadoo": "0.0.0-beta.7",
-    "mocha": "^8.1.1",
+    "kadoo": "^1.0.0",
+    "mocha": "^8.1.2",
     "nyc": "^15.1.0",
     "open": "^7.2.0",
-    "opener": "^1.5.1"
+    "opener": "^1.5.1",
+    "@mobilabs/es6kadoo": "1.0.1"
   },
   "publishConfig": {
     "access": "public"
