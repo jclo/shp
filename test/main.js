@@ -7,10 +7,8 @@
 
 
 // -- Local Modules
-const // SHP = require('../index')
-    SHP = require('../src/shp').default
-    , pack     = require('../package.json')
-    , testlib  = require('./int/lib')
+const testlib = require('./int/lib')
+    , pack    = require('../package.json')
     ;
 
 
@@ -23,16 +21,24 @@ const libname = 'SHP';
 
 // -- Main
 
+// This define root for Node.js:
+global.root = {};
+
 // Nota:
-// If you choose 'SHP = require('../index')', 'display-coverage' will
-// show the coverage of all the library in one file.
+// If you want that 'display-coverage' shows the coverage files by files,
+// you should set 'SHP' and 'testlib' like this:
+//  . const SHP = require('../src/<file>').default;
+//  . testlib(SHP, '{{lib:name}}', '{{lib:version}}', 'without new');
 //
-// If you want to display the coverage file by file, you must choose
-// 'SHP = require('../src/prototypal').default'. But, in this case,
-// the build isn't done, so you should pass '{{lib:name}}' as libname and
-// '{{lib:version}}' as the library version.
+// But, if you want that 'display-coverage' shows the coverage in one file,
+// you should set 'SHP' and 'testlib' like this:
+//  . const SHP = require('../index');
+//  . testlib(SHP, libname, pack.version, 'without new');
+
+const SHP = require('../src/shp').default;
+// const SHP = require('../index');
 
 describe('Test SHP:', () => {
-  testlib(SHP, '{{lib:name}}', '{{lib:version}}');
-  // testlib(SHP, libname, pack.version);
+  testlib(SHP, '{{lib:name}}', '{{lib:version}}', 'without new');
+  // testlib(SHP, libname, pack.version, 'without new');
 });
