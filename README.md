@@ -126,7 +126,7 @@ This method returns an object that contains the name and the version of the Natu
 [npm-url]: https://www.npmjs.com/package/@mobilabs/shp
 [release-url]: https://github.com/jclo/shp/tags
 [commit-url]: https://github.com/jclo/shp/commits/master
-[travis-url]: https://travis-ci.org/jclo/shp
+[travis-url]: https://app.travis-ci.com/jclo/shp
 [coveralls-url]: https://coveralls.io/github/jclo/shp?branch=master
 [dependencies-url]: https://david-dm.org/jclo/shp
 [devdependencies-url]: https://david-dm.org/jclo/shp?type=dev
