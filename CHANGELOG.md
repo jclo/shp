@@ -1,10 +1,10 @@
 ### HEAD
 
-### 1.0.x (January 28, 2024)
+### 1.0.2 (January 28, 2024)
 
   * Updated the url of the build badge,
   * Updated the project with ES6Kadoo v2.1 (no Gulp, Github Actions),
-  * ...,
+  * Release.
 
 
 ### 1.0.1 (January 30, 2022)
