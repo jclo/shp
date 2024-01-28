@@ -42,3 +42,5 @@ describe('Test SHP:', () => {
   testlib(SHP, '{{lib:name}}', '{{lib:version}}', 'without new');
   // testlib(SHP, libname, pack.version, 'without new');
 });
+
+// - oOo --
